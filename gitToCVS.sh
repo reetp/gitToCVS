@@ -1,21 +1,39 @@
-#!/bin/sh
+#!/bin/bash
 
+#Set Script Name variable
+SCRIPT=`basename ${BASH_SOURCE[0]}`
 
 # -c Contrib Name
 # -v Contrib Version
 # -s SME version
 
+CONTRIB=""
+VERSION=""
+SMEVERSION=""
+GITDIR=""
+CVSDIR=""
 
-while getopts ":cvs:" opt; do
+while getopts ":c:v:s:h" opt; do
   case $opt in
-    a)
-      echo "-c was triggered, Parameter: $OPTARG" >&2
+    c)
+      echo "-c was triggered, Parameter: $OPTIND - $OPTARG" >&2
+      CONTRIB=$OPTARG
+      echo "$CONTRIB - $OPTARG"
       ;;
     v)
-      echo "-c was triggered, Parameter: $OPTARG" >&2
+      echo "-v was triggered, Parameter: $OPTIND - $OPTARG" >&2
+      VERSION=$OPTARG
+      echo "$VERSION - $OPTARG"
       ;;
     s)
-      echo "-c was triggered, Parameter: $OPTARG" >&2
+      echo "-s was triggered, Parameter: $OPTIND - $OPTARG" >&2
+      SMEVERSION=$OPTARG
+      echo "$SMEVER - $OPTARG"
+      ;;
+      
+    h)  #show help
+      echo -e "Example: $SCRIPT -c contribname -v contribversion -s smeversion"\\n
+      exit 1
       ;;
       
     \?)
@@ -29,19 +47,38 @@ while getopts ":cvs:" opt; do
   esac
 done
 
+# -c = $4
+# -v = $6
+# -s = $8
 
 # cd ~/git/smeserver-libreswan
 
+#
+echo "cd ~/smecontribs/rpms/$CONTRIB/$CONTRIB-$VERSION"
 
-# cd ~/smecontribs/rpms/smeserver-libreswan
+GITDIR="~/git/$CONTRIB"
+echo "gitdir = $GITDIR"
+
+CVSDIR="~/smecontribs/rpms/smeserver-libreswan/contribs$SMEVERSION"
+echo "cvsdir = $CVSDIR"
+
+#echo "cd ~/smecontribs/rpms/smeserver-libreswan/contribs$SMEVERSION"
+
+echo "mv $CVSDIR/$CONTRIB-$VERSION $CVSDIR/$CONTRIB-$VERSION.old"
+
+echo "cp -R $GITDIR/$CONTRIB $CVSDIR/$CONTRIB-$VERSION"
+
+# If we diff here we can catch the Patch name
+# Original first
+
+echo "diff -ruN $CVSDIR/smeserver-libreswan.spec $GITDIR/smeserver-libreswan.spec |grep patch"
+
+DIFF="diff -ruN $CVSDIR/smeserver-libreswan.spec $GITDIR/smeserver-libreswan.spec |grep patch"
+
+echo "Some Diff ${$DIFF#*:} "
+
+echo "/bin/cp -rf $GITDIR/smeserver-libreswan.spec $CVSDIR/smeserver-libreswan.spec"
+
+# DIFF = "diff -ruN smeserver-libreswan-0.5.old smeserver-libreswan-0.5 |grep Patch";
 
 
-# cd contribs9
-
-# mv smeserver-libreswan-0.5 smeserver-libreswan-0.5.old
-
-# cp -R ~/git/smeserver-libreswan/smeserver-libreswan ~/smecontribs/rpms/smeserver-libreswan/contribs9/smeserver-libreswan-0.5
-
-# cp ~/git/smeserver-libreswan/smeserver-libreswan.spec ~/smecontribs/rpms/smeserver-libreswan/contribs9/smeserver-libreswan.spec
-
-# diff -ruN smeserver-libreswan-0.5.old smeserver-libreswan-0.5 > smeserver-libreswan-fix-masq-templates.patch
