@@ -12,6 +12,7 @@ VERSION=""
 SMEVERSION=""
 GITDIR=""
 CVSDIR=""
+HOMEDIR=""
 
 while getopts ":c:v:s:h" opt; do
   case $opt in
@@ -30,9 +31,13 @@ while getopts ":c:v:s:h" opt; do
       SMEVERSION=$OPTARG
       echo "$SMEVER - $OPTARG"
       ;;
-      
+    d)
+      echo "-s was triggered, Parameter: $OPTIND - $OPTARG" >&2
+      HOMEDIR=$OPTARG
+      echo "$HOMEDIR - $OPTARG"
+      ;;
     h)  #show help
-      echo -e "Example: $SCRIPT -c contribname -v contribversion -s smeversion"\\n
+      echo -e "Example: $SCRIPT -c smeserver-contrib -v 0.5 -s 9"\\n
       exit 1
       ;;
       
@@ -50,12 +55,11 @@ done
 # -c = $4
 # -v = $6
 # -s = $8
+# -d =$10
 
 # cd ~/git/smeserver-libreswan
 
 #
-echo "cd ~/smecontribs/rpms/$CONTRIB/$CONTRIB-$VERSION"
-HOMEDIR="/home/john"
 
 GITDIR="$HOMEDIR/git/$CONTRIB"
 echo "gitdir = $GITDIR"
