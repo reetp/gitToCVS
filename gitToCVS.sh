@@ -71,11 +71,11 @@ done
 
 # Set the git directory
 GITDIR="$HOMEDIR/git/$CONTRIB"
-#echo "gitdir = $GITDIR"
+echo "gitdir = $GITDIR"
 
 # Set the cvs directory
 CVSDIR="$HOMEDIR/smecontribs/rpms/smeserver-libreswan/contribs$SMEVERSION"
-#echo "cvsdir = $CVSDIR"
+echo "cvsdir = $CVSDIR"
 
 # Move the old CVS to .old
 mv $CVSDIR/$CONTRIB-$VERSION $CVSDIR/$CONTRIB-$VERSION.old
@@ -84,17 +84,19 @@ mv $CVSDIR/$CONTRIB-$VERSION $CVSDIR/$CONTRIB-$VERSION.old
 cp -R $GITDIR/$CONTRIB $CVSDIR/$CONTRIB-$VERSION
 
 # If we diff here we can catch the Patch name
-diff -ruN $CVSDIR/smeserver-libreswan.spec $GITDIR/smeserver-libreswan.spec |grep Patch
+# diff -ruN $CVSDIR/smeserver-libreswan.spec $GITDIR/smeserver-libreswan.spec |grep Patch
 
 # Get the patch name
-DIFF=$(diff -ruN $CVSDIR/smeserver-libreswan.spec $GITDIR/smeserver-libreswan.spec | grep Patch | sed 's/.*: //')
+SPECDIFF=$(diff $CVSDIR/smeserver-libreswan.spec $GITDIR/smeserver-libreswan.spec | grep Patch | sed 's/.*: //')
 
 # Now diff the old and new directories and create the patch file
 cd $CVSDIR
 
-diff -ruN ./$CONTRIB-$VERSION.old ./$CONTRIB-$VERSION > /$CVSDIR/$DIFF
+# echo "CVS/DIFF $CVSDIR/$SPECDIFF"
 
-echo "DIFF is $DIFF"
+diff -ruN $CONTRIB-$VERSION.old $CONTRIB-$VERSION > "$CVSDIR/$SPECDIFF"
+
+# echo "$CVSDIR is $SPECDIFF"
 
 # Now copy the spec file
 /bin/cp -rf $GITDIR/smeserver-libreswan.spec $CVSDIR/smeserver-libreswan.spec
