@@ -48,7 +48,7 @@ while getopts ":c:v:s:d:h" opt; do
 #      echo "$HOMEDIR - $OPTARG"
       ;;
     h)  #show help
-      echo -e "Example: $SCRIPT -c smeserver-contrib -v 0.5 -s 9"\\n
+      echo -e "Example: $SCRIPT -c smeserver-contrib -v 0.5 -s 9 -d /home/user"\\n
       exit 1
       ;;
       
@@ -92,11 +92,11 @@ SPECDIFF=$(diff $CVSDIR/$CONTRIB.spec $GITDIR/$CONTRIB.spec | grep Patch | sed '
 # Now diff the old and new directories and create the patch file
 cd $CVSDIR
 
-# echo "CVS/DIFF $CVSDIR/$SPECDIFF"
+echo "CVS/DIFF $CVSDIR/$SPECDIFF"
 
 diff -ruN $CONTRIB-$VERSION.old $CONTRIB-$VERSION > "$CVSDIR/$SPECDIFF"
 
-# echo "$CVSDIR is $SPECDIFF"
+echo "$CVSDIR is $SPECDIFF"
 
 # Now copy the spec file
 /bin/cp -rf $GITDIR/$CONTRIB.spec $CVSDIR/$CONTRIB.spec
